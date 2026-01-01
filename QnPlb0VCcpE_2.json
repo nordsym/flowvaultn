@@ -1,0 +1,57 @@
+{
+  "name": "@modelcontextprotocol/servers",
+  "private": true,
+  "version": "0.6.2",
+  "description": "Model Context Protocol servers",
+  "license": "MIT",
+  "author": "Anthropic, PBC (https://anthropic.com)",
+  "homepage": "https://modelcontextprotocol.io",
+  "bugs": "https://github.com/modelcontextprotocol/servers/issues",
+  "type": "module",
+  "workspaces": [
+    "src/*"
+  ],
+  "files": [],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "watch": "npm run watch --workspaces",
+    "publish-all": "npm publish --workspaces --access public",
+    "link-all": "npm link --workspaces"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server-everything": "*",
+    "@modelcontextprotocol/server-memory": "*",
+    "@modelcontextprotocol/server-filesystem": "*",
+    "@modelcontextprotocol/server-sequential-thinking": "*"
+  },
+  "nodes": [
+    {
+      "id": "nordsym-brand-header",
+      "name": "NordSym Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "content": "## 🔷 NordSym AB\n**Verifierad Automation**\n\n📦 **Källa:** FlowVault.se\n🏷️ **Version:** 1.0\n📧 **Support:** support@nordsym.com\n\n💡 **Installation:**\n1. Importera i n8n\n2. Konfigurera credentials\n3. Testa med test-data\n4. Aktivera workflow\n\n🔗 **Mer hjälp:** nordsym.com",
+        "height": 320,
+        "width": 300,
+        "color": 5
+      }
+    }
+  ],
+  "meta": {
+    "templateCreator": "NordSym AB",
+    "templateVersion": "1.0",
+    "verified": true,
+    "source": "FlowVault.se",
+    "contact": "support@nordsym.com",
+    "driveFileId": "1yqXLc318sICay3sCahk_rQGzYOaX_jrt",
+    "brandedAt": "2026-01-01T22:39:04.079Z"
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

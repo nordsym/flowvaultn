@@ -1,0 +1,1640 @@
+{
+  "name": "n8n Recruitment",
+  "nodes": [
+    {
+      "id": "nordsym-brand-header",
+      "name": "NordSym Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "content": "## 🔷 NordSym AB\n**Verifierad Automation**\n\n📦 **Källa:** FlowVault.se\n🏷️ **Version:** 1.0\n📧 **Support:** support@nordsym.com\n\n💡 **Installation:**\n1. Importera i n8n\n2. Konfigurera credentials\n3. Testa med test-data\n4. Aktivera workflow\n\n🔗 **Mer hjälp:** nordsym.com",
+        "height": 320,
+        "width": 300,
+        "color": 5
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "indeed subject:applied on Indeed"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "41a77d5d-25e8-44f8-a75b-9308ef055774",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbC6ZP26bgrevwNw",
+          "name": "Jono n8n"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You're an intelligent bot capable of pulling out the job title from an email subject line",
+              "role": "system"
+            },
+            {
+              "content": "=Please pull out the job title from this email subject line:\n{{ $json.subject }}"
+            },
+            {
+              "content": "=Please output the data in JSON format with the following structure:\n{\n  \"job\": \"\"\n}\n",
+              "role": "assistant"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        0
+      ],
+      "id": "d1983707-750c-4ed3-8927-0e0e21b8245e",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "9RWAaaO3Wu3uNVX7",
+          "name": "n8n Jono"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg",
+          "mode": "list",
+          "cachedResultName": "n8n Recruitment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "First Name": "={{ $('Gmail Trigger').item.json.from.value[0].name.split(\" \")[0] }}",
+            "Last Name": "={{ $('Gmail Trigger').item.json.from.value[0].name.split(\" \")[1] }}",
+            "Job": "={{ $json.message.content.job }}",
+            "Date Added": "={{ $today }}",
+            "Code": "={{ Math.floor(Math.random() * 999999999999) }}",
+            "Indeed Email": "={{ $('Gmail Trigger').item.json.from.value[0].address }}"
+          },
+          "matchingColumns": [
+            "Indeed Email"
+          ],
+          "schema": [
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job",
+              "displayName": "Job",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rejected",
+              "displayName": "Rejected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Questions",
+              "displayName": "Questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Screening",
+              "displayName": "Screening",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Test Complete",
+              "displayName": "Test Complete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Test Approved",
+              "displayName": "Test Approved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Interview Scheduled",
+              "displayName": "Interview Scheduled",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hire",
+              "displayName": "Hire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Indeed Email",
+              "displayName": "Indeed Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resume",
+              "displayName": "Resume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Portfolio Link",
+              "displayName": "Portfolio Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Years Of Experience",
+              "displayName": "Years Of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Expected Salary",
+              "displayName": "Expected Salary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Added",
+              "displayName": "Date Added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Code",
+              "displayName": "Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        580,
+        0
+      ],
+      "id": "1ca01f74-8445-4198-a2e1-4b0e2a89f301",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oHG2DldApzJrCoBY",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=jccatliff@gmail.com",
+        "subject": "=RE:  {{ $('OpenAI').item.json.message.content.job }} Position",
+        "emailType": "text",
+        "message": "=Hey {{ $json['First Name'] }},\n\nThanks for applying for the {{ $('OpenAI').item.json.message.content.job }} position at company XYZ! The next steps are to fill out our onboarding forms here:\nhttps://jonocatliff.app.n8n.cloud/form-test/a5317131-bc2c-4620-a0ec-8acb7d866388\n\nPlease enter in the code:\n{{ $json.Code }}\n\nBest,\nJono",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "04e68b2a-13b0-4306-824a-b3d4ff6f6d01",
+      "name": "Gmail",
+      "webhookId": "bfd3564f-d46f-42ca-9fc5-1b95dfd22161",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbC6ZP26bgrevwNw",
+          "name": "Jono n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Onboarding Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name"
+            },
+            {
+              "fieldLabel": "Last Name"
+            },
+            {
+              "fieldLabel": "Email"
+            },
+            {
+              "fieldLabel": "Resume",
+              "fieldType": "file"
+            },
+            {
+              "fieldLabel": "Portfolio Link",
+              "placeholder": "Please add in a Google Drive Link"
+            },
+            {
+              "fieldLabel": "Years Of Experience"
+            },
+            {
+              "fieldLabel": "Expected Salary",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Code",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        240
+      ],
+      "id": "38270e20-bd4d-457f-b6d6-e5444e7bbf73",
+      "name": "On form submission",
+      "webhookId": "a5317131-bc2c-4620-a0ec-8acb7d866388"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg",
+          "mode": "list",
+          "cachedResultName": "n8n Recruitment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "First Name": "={{ $json['First Name'] }}",
+            "Last Name": "={{ $json['Last Name'] }}",
+            "Date Added": "={{ $today }}",
+            "Code": "={{ $json.Code }}",
+            "Indeed Email": "=",
+            "Resume": "={{ $json.Resume }}",
+            "Years Of Experience": "={{ $json['Years Of Experience'] }}",
+            "Expected Salary": "={{ $json['Expected Salary'] }}",
+            "Email": "={{ $json.Email }}",
+            "Portfolio Link": "={{ $json['Portfolio Link'] }}",
+            "Questions": "TRUE",
+            "Rejected": "={{ $if($json['Years Of Experience'] <= 3, \"TRUE\", \"FALSE\") }}"
+          },
+          "matchingColumns": [
+            "Code"
+          ],
+          "schema": [
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job",
+              "displayName": "Job",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Rejected",
+              "displayName": "Rejected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Questions",
+              "displayName": "Questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Screening",
+              "displayName": "Screening",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Test Complete",
+              "displayName": "Test Complete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Test Approved",
+              "displayName": "Test Approved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Interview Scheduled",
+              "displayName": "Interview Scheduled",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hire",
+              "displayName": "Hire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Indeed Email",
+              "displayName": "Indeed Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resume",
+              "displayName": "Resume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Portfolio Link",
+              "displayName": "Portfolio Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Years Of Experience",
+              "displayName": "Years Of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Expected Salary",
+              "displayName": "Expected Salary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date Added",
+              "displayName": "Date Added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Code",
+              "displayName": "Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        240
+      ],
+      "id": "f027c4f8-835c-4ea9-982d-9ffd4eac6695",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oHG2DldApzJrCoBY",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a424d03a-ad81-49de-96b9-72e90bc267bf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        500
+      ],
+      "id": "64fe122f-addd-4845-800b-14c33b9f837e",
+      "name": "Webhook",
+      "webhookId": "a424d03a-ad81-49de-96b9-72e90bc267bf",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "66b64a5f-6f83-4339-a9f8-49bd461c3dec",
+              "leftValue": "={{ $json.body.value }}",
+              "rightValue": "TRUE",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        500
+      ],
+      "id": "79d0d0ce-11ad-41bd-9ff7-867e6961b745",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.range.columnStart }}",
+                    "rightValue": 6,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "47d73929-0ce9-4de8-a993-2a27532d336b",
+                    "leftValue": "={{ $json.body.range.columnStart }}",
+                    "rightValue": 8,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c91464e3-719a-416d-ac35-2d885ae9c3cb",
+                    "leftValue": "={{ $json.body.range.columnStart }}",
+                    "rightValue": 10,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e7b8d74a-3520-40e8-b3ef-2288d29760d1",
+                    "leftValue": "={{ $json.body.range.columnStart }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        420,
+        500
+      ],
+      "id": "4f70abc6-3e59-4163-be8c-0e60e96aba90",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "=jccatliff@gmail.com",
+        "subject": "=RE:{{ $('Webhook').item.json.body.rowValues[0]['2'] }} Next Steps | Test",
+        "emailType": "text",
+        "message": "=Hey {{ $('Webhook').item.json.body.rowValues[0]['0'] }},\n\nThanks for finishing our onboarding. Everything looks great. The next steps are to complete a video editing test. Please submit your results here:\nhttps://jonocatliff.app.n8n.cloud/form-test/a70513cc-101c-47a9-92fa-1109916b4419\n\n//Here are the requirements\n1. Make sure to upload your results to Google Drive\n2. Make sure to set the link to public so I can view it\n\nPlease enter in the code:\n{{ $('Webhook').item.json.body.rowValues[0]['18'] }}\n\nBest,\nJono",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        260
+      ],
+      "id": "df9693ee-6594-40f8-8335-d9ba0c10355d",
+      "name": "Gmail1",
+      "webhookId": "bfd3564f-d46f-42ca-9fc5-1b95dfd22161",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbC6ZP26bgrevwNw",
+          "name": "Jono n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Onboarding Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Google Drive Test Results Link",
+              "placeholder": "Please add in a Google Drive Link"
+            },
+            {
+              "fieldLabel": "Code",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        740
+      ],
+      "id": "5d33c030-9b2f-4db2-bffe-35cb0ccb97e6",
+      "name": "On form submission1",
+      "webhookId": "a70513cc-101c-47a9-92fa-1109916b4419",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg",
+          "mode": "list",
+          "cachedResultName": "n8n Recruitment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Code": "={{ $json.Code }}",
+            "Test Complete": "TRUE",
+            "Test Link": "={{ $json['Google Drive Test Results Link'] }}"
+          },
+          "matchingColumns": [
+            "Code"
+          ],
+          "schema": [
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Job",
+              "displayName": "Job",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Rejected",
+              "displayName": "Rejected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Questions",
+              "displayName": "Questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Screening",
+              "displayName": "Screening",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Test Complete",
+              "displayName": "Test Complete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Test Approved",
+              "displayName": "Test Approved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Interview Scheduled",
+              "displayName": "Interview Scheduled",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hire",
+              "displayName": "Hire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Indeed Email",
+              "displayName": "Indeed Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Resume",
+              "displayName": "Resume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Portfolio Link",
+              "displayName": "Portfolio Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Years Of Experience",
+              "displayName": "Years Of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Expected Salary",
+              "displayName": "Expected Salary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date Added",
+              "displayName": "Date Added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Code",
+              "displayName": "Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Test Link",
+              "displayName": "Test Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        740
+      ],
+      "id": "b6575e89-561b-402c-9c66-a954b11873aa",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oHG2DldApzJrCoBY",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        420,
+        740
+      ],
+      "id": "0d259658-3b2f-4526-a626-31680bd6ca49",
+      "name": "Slack",
+      "webhookId": "a990fd04-1480-401b-9a5b-4be95156417a",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        420,
+        240
+      ],
+      "id": "bb03fae3-e40d-4b46-9d94-a851e8121353",
+      "name": "Slack1",
+      "webhookId": "a990fd04-1480-401b-9a5b-4be95156417a",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "sendTo": "=jccatliff@gmail.com",
+        "subject": "=RE:{{ $('Webhook').item.json.body.rowValues[0]['2'] }} Next Steps | Test",
+        "emailType": "text",
+        "message": "=Hey {{ $('Webhook').item.json.body.rowValues[0]['0'] }},\n\nThanks for inquiring with our position. Unfortunately, it's not the right fit at this time. All the best,\n\nJono",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        820
+      ],
+      "id": "a239dbcb-7438-4f95-9365-dd388adfae36",
+      "name": "Gmail2",
+      "webhookId": "bfd3564f-d46f-42ca-9fc5-1b95dfd22161",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbC6ZP26bgrevwNw",
+          "name": "Jono n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=jccatliff@gmail.com",
+        "subject": "=RE:{{ $('Webhook').item.json.body.rowValues[0]['2'] }} Next Steps | Test",
+        "emailType": "text",
+        "message": "=Hey {{ $('Webhook').item.json.body.rowValues[0]['0'] }},\n\nThanks for finishing our test. The results look great. The next step is to schedule an interview. Here's my calendar:\nhttps://cal.com/jono-catliff-vegjw5/15min?code={{ $('Webhook').item.json.body.rowValues[0]['18'] }}\n\nBest,\nJono",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        400
+      ],
+      "id": "5d947591-2e43-4be2-8e20-b79b70e39e39",
+      "name": "Gmail3",
+      "webhookId": "bfd3564f-d46f-42ca-9fc5-1b95dfd22161",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbC6ZP26bgrevwNw",
+          "name": "Jono n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "events": [
+          "BOOKING_CREATED"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.calTrigger",
+      "typeVersion": 2,
+      "position": [
+        0,
+        940
+      ],
+      "id": "6a609f9d-80e2-487c-8a8e-6951599383b3",
+      "name": "Cal.com Trigger",
+      "webhookId": "ce5a7424-b7f6-454d-a828-bd88a3e83dfe",
+      "credentials": {
+        "calApi": {
+          "id": "ed3h62lk1Lhau7V6",
+          "name": "Cal account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg",
+          "mode": "list",
+          "cachedResultName": "n8n Recruitment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qYAl0JNiMlbgxPzeGomCmsVfkbo-wHsWMWzeSoLlQTg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Code": "={{ $json.userFieldsResponses.code.value }}",
+            "Interview Scheduled": "TRUE"
+          },
+          "matchingColumns": [
+            "Code"
+          ],
+          "schema": [
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Job",
+              "displayName": "Job",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Rejected",
+              "displayName": "Rejected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Questions",
+              "displayName": "Questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Screening",
+              "displayName": "Screening",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Test Complete",
+              "displayName": "Test Complete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Test Approved",
+              "displayName": "Test Approved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Interview Scheduled",
+              "displayName": "Interview Scheduled",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hire",
+              "displayName": "Hire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Indeed Email",
+              "displayName": "Indeed Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Resume",
+              "displayName": "Resume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Portfolio Link",
+              "displayName": "Portfolio Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Years Of Experience",
+              "displayName": "Years Of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Expected Salary",
+              "displayName": "Expected Salary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date Added",
+              "displayName": "Date Added",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Code",
+              "displayName": "Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Test Link",
+              "displayName": "Test Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        940
+      ],
+      "id": "a5a4702b-3688-463e-9212-d4bd8cd704cb",
+      "name": "Google Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oHG2DldApzJrCoBY",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "channel",
+        "operation": "invite",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        800,
+        660
+      ],
+      "id": "f1fa58f1-b6a4-4a67-b718-6cd32bd8c46f",
+      "name": "Slack2",
+      "webhookId": "40984144-b13d-4d2a-ab33-2350b8524c42",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        420,
+        940
+      ],
+      "id": "ff54dae5-c0ad-4aff-a3b0-f1ff4112e60e",
+      "name": "Slack3",
+      "webhookId": "a990fd04-1480-401b-9a5b-4be95156417a",
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Slack1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cal.com Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets3": {
+      "main": [
+        [
+          {
+            "node": "Slack3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9b44f255-fce4-48bc-b2fd-4b3e6fd8e22f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d2017cc6d1e4b956d269a8123bffa72fb7aaa41ad37a73b7c0fb64c7d0e2edae",
+    "templateCreator": "NordSym AB",
+    "templateVersion": "1.0",
+    "verified": true,
+    "source": "FlowVault.se",
+    "contact": "support@nordsym.com",
+    "driveFileId": "1qm916r1TGLBihsGOGJRMx_asQVyiKprd",
+    "brandedAt": "2026-01-01T22:38:06.612Z"
+  },
+  "id": "Pp6PQ0h74y2aZCgN",
+  "tags": []
+}
