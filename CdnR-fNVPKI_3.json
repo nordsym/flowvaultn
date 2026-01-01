@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/tools-evaluations/**/*"
+  ],
+  "nodes": [
+    {
+      "id": "nordsym-brand-header",
+      "name": "NordSym Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "content": "## 🔷 NordSym AB\n**Verifierad Automation**\n\n📦 **Källa:** FlowVault.se\n🏷️ **Version:** 1.0\n📧 **Support:** support@nordsym.com\n\n💡 **Installation:**\n1. Importera i n8n\n2. Konfigurera credentials\n3. Testa med test-data\n4. Aktivera workflow\n\n🔗 **Mer hjälp:** nordsym.com",
+        "height": 320,
+        "width": 300,
+        "color": 5
+      }
+    }
+  ],
+  "meta": {
+    "templateCreator": "NordSym AB",
+    "templateVersion": "1.0",
+    "verified": true,
+    "source": "FlowVault.se",
+    "contact": "support@nordsym.com",
+    "driveFileId": "1oy8QHnbYx8IkBXuyf1F3LvmYlREm_yYA",
+    "brandedAt": "2026-01-01T22:37:38.610Z"
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
