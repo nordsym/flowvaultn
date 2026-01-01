@@ -1,0 +1,425 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 * * *"
+            }
+          ]
+        }
+      },
+      "id": "f3034cb5-ef9d-4d82-a738-3f3a49a788ef",
+      "name": "Kör Varje Natt",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -880,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.fortnox.se/3/invoices",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "fortnoxOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "filter",
+              "value": "fullypaid"
+            },
+            {
+              "name": "lastmodified",
+              "value": "={{ $now.minus({ days: 1 }).toFormat('yyyy-MM-dd') }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "a3fba705-29c5-4640-acbe-8054de1b9469",
+      "name": "Hämta Betalda Fakturor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -656,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrahera fakturor från Fortnox response\nconst invoices = $input.first().json.Invoices || [];\n\n// Transform till Sheets-format\nreturn invoices.map(invoice => ({\n  json: {\n    Fakturanummer: invoice.DocumentNumber || '',\n    Kundnummer: invoice.CustomerNumber || '',\n    Kundnamn: invoice.CustomerName || '',\n    Fakturadatum: invoice.InvoiceDate || '',\n    Förfallodatum: invoice.DueDate || '',\n    Totalbelopp: invoice.Total || 0,\n    Moms: invoice.TotalVAT || 0,\n    Valuta: invoice.Currency || 'SEK',\n    Status: invoice.Booked ? 'Bokförd' : 'Ej bokförd',\n    Betaldatum: invoice.FinalPayDate || '',\n    OCR: invoice.OCR || ''\n  }\n}));"
+      },
+      "id": "9ef62cf3-d9ae-4911-9e64-b41dd468d397",
+      "name": "Formatera Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-data-condition",
+              "leftValue": "={{ $json.Fakturanummer }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "46c58763-0aa6-4c20-a378-d3d5e2d065bb",
+      "name": "Filtrera Tomma",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "Fakturanummer"
+          ],
+          "schema": [
+            {
+              "id": "Fakturanummer",
+              "displayName": "Fakturanummer",
+              "required": false,
+              "defaultMatch": true,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Kundnummer",
+              "displayName": "Kundnummer",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Kundnamn",
+              "displayName": "Kundnamn",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fakturadatum",
+              "displayName": "Fakturadatum",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Förfallodatum",
+              "displayName": "Förfallodatum",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Totalbelopp",
+              "displayName": "Totalbelopp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Moms",
+              "displayName": "Moms",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Valuta",
+              "displayName": "Valuta",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Betaldatum",
+              "displayName": "Betaldatum",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "OCR",
+              "displayName": "OCR",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "useAppend": false
+        }
+      },
+      "id": "880aa3f6-e78d-4bf7-905a-49816e63ae4c",
+      "name": "Lägg Till i Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ed7dgMYiLqG0DfBd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "options": {}
+      },
+      "id": "1476e9a8-1ed1-43b8-acb2-1fa6506521e3",
+      "name": "Sammanställ Resultat",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        224,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "summary-message",
+              "name": "Meddelande",
+              "value": "=Synkade {{ $('Filtrera Tomma').all().length }} fakturor till Google Sheets",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "Tidpunkt",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "total-processed",
+              "name": "Antal Fakturor",
+              "value": "={{ $('Filtrera Tomma').all().length }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3dfff58-6224-484a-9cd8-4193e848182f",
+      "name": "Skapa Sammanfattning",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "error-message",
+              "name": "Felmeddelande",
+              "value": "Inga fakturor hittades eller fel vid hämtning från Fortnox",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "Tidpunkt",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "113e50e3-dc27-434d-85a0-b45ab5415d5d",
+      "name": "Ingen Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        208
+      ]
+    }
+  ],
+  "connections": {
+    "Kör Varje Natt": {
+      "main": [
+        [
+          {
+            "node": "Hämta Betalda Fakturor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hämta Betalda Fakturor": {
+      "main": [
+        [
+          {
+            "node": "Formatera Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatera Data": {
+      "main": [
+        [
+          {
+            "node": "Filtrera Tomma",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrera Tomma": {
+      "main": [
+        [
+          {
+            "node": "Lägg Till i Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ingen Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lägg Till i Sheets": {
+      "main": [
+        [
+          {
+            "node": "Sammanställ Resultat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sammanställ Resultat": {
+      "main": [
+        [
+          {
+            "node": "Skapa Sammanfattning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "639b1b6d4990f4dffcc15ab5c2b23c4f7085f3de3f704915e01a9c7e4721e250"
+  }
+}
