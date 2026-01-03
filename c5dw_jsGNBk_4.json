@@ -1,0 +1,86 @@
+{
+  "name": "NordSym Brand Sentinel",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🔷 NordSym AB\n**Verifierad Automation**\n\n📦 **Suite:** Webcrawler Elite\n🏷️ **Version:** 2.0\n\nDetta flöde är genererat för specifika ändamål. Konfigurera credentials innan start.",
+        "height": 280,
+        "width": 300,
+        "color": 5
+      },
+      "id": "nordsym-brand-header",
+      "name": "NordSym Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=MyBrand"
+      },
+      "name": "Fetch RSS",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "prompt": "Analyze sentiment: Positive, Negative or Neutral"
+      },
+      "name": "Sentiment AI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [
+        560,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.sentiment }}",
+              "value2": "Negative"
+            }
+          ]
+        }
+      },
+      "name": "If Negative",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        760,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "alerts"
+      },
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        960,
+        100
+      ]
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCreator": "NordSym AB",
+    "description": "AI Sentiment analysis",
+    "generatedAt": "2026-01-03T12:01:33.037Z"
+  }
+}

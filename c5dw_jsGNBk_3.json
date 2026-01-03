@@ -1,0 +1,66 @@
+{
+  "name": "NordSym Lead Harvester",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🔷 NordSym AB\n**Verifierad Automation**\n\n📦 **Suite:** Webcrawler Elite\n🏷️ **Version:** 2.0\n\nDetta flöde är genererat för specifika ändamål. Konfigurera credentials innan start.",
+        "height": 280,
+        "width": 300,
+        "color": 5
+      },
+      "id": "nordsym-brand-header",
+      "name": "NordSym Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "path": "webhook-test"
+      },
+      "name": "Start Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.website }}/contact"
+      },
+      "name": "Visit Contact Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        560,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "regex": "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}"
+      },
+      "name": "Regex Email Extractor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        200
+      ]
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCreator": "NordSym AB",
+    "description": "Contact scraping workflow",
+    "generatedAt": "2026-01-03T12:01:33.037Z"
+  }
+}

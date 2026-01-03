@@ -1,0 +1,81 @@
+{
+  "name": "NordSym Price Watcher",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🔷 NordSym AB\n**Verifierad Automation**\n\n📦 **Suite:** Webcrawler Elite\n🏷️ **Version:** 2.0\n\nDetta flöde är genererat för specifika ändamål. Konfigurera credentials innan start.",
+        "height": 280,
+        "width": 300,
+        "color": 5
+      },
+      "id": "nordsym-brand-header",
+      "name": "NordSym Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hours": 6
+            }
+          ]
+        }
+      },
+      "name": "Schedule (6h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://competitor.com/product",
+        "responseFormat": "string"
+      },
+      "name": "Get Product Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        560,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "price",
+              "cssSelector": ".product-price"
+            }
+          ]
+        }
+      },
+      "name": "Extract Price",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1,
+      "position": [
+        760,
+        200
+      ]
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCreator": "NordSym AB",
+    "description": "Competitor price tracking",
+    "generatedAt": "2026-01-03T12:01:33.037Z"
+  }
+}
