@@ -148,19 +148,20 @@
     <!-- Header -->
     <header class="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 glass">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="resetApp()">
+            <div class="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0 relative z-50" onclick="resetApp()">
                 <!-- NordSym Logo -->
-                <img src="https://raw.githubusercontent.com/GusHem/NordSym-Logga/refs/heads/main/Final%20logo%20no%20text.svg" alt="NordSym Logo" class="w-10 h-10 object-contain">
+                <img src="https://raw.githubusercontent.com/GusHem/NordSym-Logga/refs/heads/main/Final%20logo%20no%20text.svg" alt="NordSym Logo" class="w-8 h-8 sm:w-10 sm:h-10 object-contain">
                 <div class="flex flex-col justify-center">
                     <div class="flex items-center gap-2">
-                        <h1 class="font-heading text-xl font-bold tracking-tight leading-none text-slate-900 dark:text-white">FlowVault</h1>
-                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">BETA</span>
+                        <h1 class="font-heading text-lg sm:text-xl font-bold tracking-tight leading-none text-slate-900 dark:text-white">FlowVault</h1>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 whitespace-nowrap">BETA</span>
                     </div>
-                    <span class="text-[10px] text-slate-500 font-medium tracking-wide uppercase">Drivs av NordSym</span>
+                    <!-- HIDDEN ON MOBILE TO SAVE SPACE -->
+                    <span class="text-[10px] text-slate-500 font-medium tracking-wide uppercase hidden sm:block">Drivs av NordSym</span>
                 </div>
             </div>
             
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 sm:gap-4 shrink-0">
                 <!-- Download Counter (Visible for Free users) -->
                 <div id="download-counter" class="hidden md:flex flex-col items-end mr-2">
                     <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Gratis Nedladdningar</div>
@@ -170,7 +171,7 @@
                 </div>
 
                 <!-- Upgrade Button - UPDATED: Mobile Optimized (Icon only on mobile) -->
-                <button id="header-upgrade-btn" onclick="openPaywall('upgrade_header')" class="flex btn-sm bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-600 hover:to-purple-700 text-white px-3 sm:px-5 py-2 rounded-lg text-sm font-bold shadow-lg shadow-fuchsia-500/30 transition-all hover:scale-105 items-center gap-2">
+                <button id="header-upgrade-btn" onclick="openPaywall('upgrade_header')" class="flex btn-sm bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-600 hover:to-purple-700 text-white px-2 sm:px-5 py-2 rounded-lg text-sm font-bold shadow-lg shadow-fuchsia-500/30 transition-all hover:scale-105 items-center gap-2">
                     <i data-lucide="zap" class="w-4 h-4 fill-white"></i> <span class="hidden sm:inline">Uppgradera</span>
                 </button>
 
@@ -760,10 +761,11 @@
     </div>
 
     <!-- Detail Modal (FIXED SCROLL & Z-INDEX) -->
-    <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[60] hidden transition-opacity opacity-0 overflow-y-auto" aria-hidden="true" onclick="closeModal(event)">
-        <div class="min-h-screen px-4 text-center">
-            <span class="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
-            <div id="modal-content" class="inline-block w-full max-w-2xl p-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 relative scale-95 opacity-0" onclick="event.stopPropagation()">
+    <div id="modal-backdrop" class="fixed inset-0 z-[60] overflow-y-auto bg-slate-900/70 backdrop-blur-sm hidden transition-opacity opacity-0" aria-hidden="true" onclick="closeModal(event)">
+        <!-- MODAL CENTER FIX: Using flexbox centering instead of inline-block hack -->
+        <div class="flex min-h-full items-start sm:items-center justify-center p-4 pt-20 sm:pt-4 text-center">
+            
+            <div id="modal-content" class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left align-middle shadow-xl transition-all border border-slate-200 dark:border-slate-800 relative scale-95 opacity-0" onclick="event.stopPropagation()">
                 <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
                 <div class="mb-6 pr-8">
                     <div class="flex flex-wrap items-center gap-2 mb-3">
